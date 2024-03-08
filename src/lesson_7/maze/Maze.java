@@ -1,12 +1,14 @@
 package lesson_7.maze;
 
-import java.util.Random;
+import java.util.*;
 
 public class Maze {
-    private TileType[][] grid;
+    private Tile[][] grid;
+    private Tile startTile;
+    private Tile exitTile;
 
     public Maze(int rows, int columns) {
-        grid = new TileType[rows][columns];
+        grid = new Tile[rows][columns];
         randomlyGenerateMaze();
     }
 
@@ -18,9 +20,9 @@ public class Maze {
                 // 30% chance of having a wall
                 int randomNumber = random.nextInt(100);
                 if (randomNumber <= 30) {
-                    grid[i][j] = TileType.WALL;
+                    grid[i][j] = new Tile(TileType.WALL, i, j);
                 } else {
-                    grid[i][j] = TileType.EMPTY;
+                    grid[i][j] = new Tile(TileType.EMPTY, i, j);
                 }
             }
         }
@@ -30,8 +32,12 @@ public class Maze {
         int exitRow = random.nextInt(grid.length);
         int exitColumn = random.nextInt(grid[0].length);
 
-        grid[startRow][startColumn] = TileType.START;
-        grid[exitRow][exitColumn] = TileType.EXIT;
+        startTile = new Tile(TileType.START, startRow, startColumn);
+        exitTile = new Tile(TileType.EXIT, exitRow, exitColumn);
+
+        grid[startRow][startColumn] = startTile;
+        grid[exitRow][exitColumn] = exitTile;
+
     }
 
     public void print() {
@@ -43,7 +49,7 @@ public class Maze {
                 if (j == 0) {
                     System.out.print("|");
                 }
-                System.out.print(grid[i][j]);
+                System.out.print(grid[i][j].getConsoleDisplay());
                 if (j == grid[i].length - 1) {
                     System.out.print("|");
                 }
@@ -51,6 +57,54 @@ public class Maze {
             System.out.println();
         }
         printHorizontalBorder();
+    }
+
+    public void findSolution() {
+        Stack<Tile> stack = new Stack<>();
+        stack.push(startTile);
+        Set<Tile> visited = new HashSet<>();
+
+        while (!stack.isEmpty()) {
+            Tile current = stack.peek();
+            if (current.tileType == TileType.EXIT) {
+                System.out.println("Solution:" + stack);
+                return;
+            }
+            visited.add(current);
+
+            List<Tile> neighbours = new ArrayList<>();
+            // top tile
+            if (current.row > 0 &&
+                    !visited.contains(grid[current.row - 1][current.column])
+                    && grid[current.row - 1][current.column].tileType != TileType.WALL) {
+                neighbours.add(grid[current.row - 1][current.column]);
+            }
+            // bottom tile
+            if (current.row < grid.length - 1 &&
+                    !visited.contains(grid[current.row + 1][current.column])
+                    && grid[current.row + 1][current.column].tileType != TileType.WALL) {
+                neighbours.add(grid[current.row + 1][current.column]);
+            }
+            // left tile
+            if (current.column > 0 &&
+                    !visited.contains(grid[current.row][current.column - 1])
+                    && grid[current.row][current.column - 1].tileType != TileType.WALL) {
+                neighbours.add(grid[current.row][current.column - 1]);
+            }
+            // right tile
+            if (current.column < grid[0].length - 1 &&
+                    !visited.contains(grid[current.row][current.column + 1])
+                    && grid[current.row][current.column + 1].tileType != TileType.WALL) {
+                neighbours.add(grid[current.row][current.column + 1]);
+            }
+
+            if (neighbours.isEmpty()) {
+                stack.pop();
+            } else {
+                stack.push(neighbours.get(0));
+            }
+        }
+        System.out.println("No exit found...");
     }
 
     private void printHorizontalBorder() {

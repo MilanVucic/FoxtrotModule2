@@ -1,20 +1,23 @@
 package lesson_12;
 
 public class Timer extends Thread{
-    private int time = 30;
+    private int time;
+    private TimerCallback timerCallback;
 
-    public Timer(int time) {
+    public Timer(int time, TimerCallback timerCallback) {
         this.time = time;
+        this.timerCallback = timerCallback;
     }
 
     @Override
     public void run() {
         while (!isInterrupted()) {
-            System.out.println(time);
-            time--;
             if (time == 0) {
+                timerCallback.finished();
                 break;
             }
+            timerCallback.onTick(time);
+            time--;
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

@@ -2,18 +2,18 @@ package lesson_12;
 
 public class Main {
     public static void main(String[] args) {
-        Object lock = new Object();
+        Timer timer = new Timer(10, new TimerCallback() {
+            @Override
+            public void finished() {
+                System.out.println("Time has run out...");
+            }
 
-        System.out.println("...asd");
-        System.out.println("...asd");
-        System.out.println("...asd");
-        System.out.println("...asd");
-        System.out.println("...asd");
-        System.out.println("...asd");
-
-        synchronized (lock) {
-            System.out.println("...");
-        }
+            @Override
+            public void onTick(int timeRemaining) {
+                System.out.println("Time remaining: " + timeRemaining);
+            }
+        });
+        timer.start();
     }
 
     private static void threadsExample() {

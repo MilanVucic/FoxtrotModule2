@@ -1,0 +1,24 @@
+{
+  "name": "Milan",
+  "age": 28,
+  "married": false,
+  "location": {
+    "city": "Belgrade",
+    "zip": 11000
+  },
+  "phoneNumbers": [
+    "0182387123",
+    "129391239",
+    "12381293"
+  ],
+  "friends": [
+    {
+      "name": "Marco",
+      "age": 31
+    },
+    {
+      "name": "Mary",
+      "age": 30
+    }
+  ]
+}

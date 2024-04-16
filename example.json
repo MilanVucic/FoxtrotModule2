@@ -1,6 +1,7 @@
 {
   "name": "Milan",
   "age": 28,
+  "height": 15.4,
   "married": false,
   "location": {
     "city": "Belgrade",
